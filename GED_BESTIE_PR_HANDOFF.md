@@ -9,6 +9,7 @@ I cannot directly modify GED Bestie from this workspace because this environment
 This is **Option A** from the integration plan:
 - Keep Math Challenge Games as an embedded web module.
 - Use bridge events to connect gameplay telemetry/results to GED Bestie.
+- Use `CONNECT_THE_DOTS.md` for an implementation-ready host bridge + API wiring sequence.
 
 ## Do we need to rewrite the plan?
 No full rewrite is required.
