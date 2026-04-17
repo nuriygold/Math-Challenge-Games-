@@ -5,6 +5,11 @@ Yes — you can (and should) open the production PR in the **actual GED Bestie r
 
 I cannot directly modify GED Bestie from this workspace because this environment only contains the `Math-Challenge-Games-` repository.
 
+## Which option is this?
+This is **Option A** from the integration plan:
+- Keep Math Challenge Games as an embedded web module.
+- Use bridge events to connect gameplay telemetry/results to GED Bestie.
+
 ## Do we need to rewrite the plan?
 No full rewrite is required.
 

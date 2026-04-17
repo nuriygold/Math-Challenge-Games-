@@ -5,6 +5,11 @@ Yes — the Math Challenge Games can be a **feature module** inside the GED BFF 
 
 The fastest path is to treat this repository as a standalone web mini-app and embed it in GED BFF first, then progressively refactor shared services (auth, analytics, progress, and theming).
 
+## Current implementation status in this repo
+The code updates added so far align with **Option A (embedded web module), early integration stage**:
+- Bridge event hooks are implemented in `index.html` (`onGameStart`, `onQuestionAnswered`, `onGameComplete`).
+- Full GED Bestie host wiring (routes, backend persistence, auth integration, analytics dashboards) still needs to be implemented in the GED Bestie repository.
+
 ---
 
 ## Recommended architecture
