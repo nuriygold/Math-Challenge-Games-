@@ -409,6 +409,23 @@
     <div class="feedback-flash" id="feedbackFlash">+10</div>
 
 <script>
+const GED_BFF_CONFIG = {
+    gameId: 'math-challenge-games',
+    appName: 'GED BFF',
+    bridgeVersion: '1.0'
+};
+
+const gedBridge = window.GED_BFF_BRIDGE || null;
+
+function emitBridgeEvent(eventName, payload) {
+    if (!gedBridge || typeof gedBridge[eventName] !== 'function') return;
+    try {
+        gedBridge[eventName](payload);
+    } catch (err) {
+        console.warn(`[${GED_BFF_CONFIG.appName}] bridge event failed: ${eventName}`, err);
+    }
+}
+
 // Create background animation
 const bgAnimation = document.getElementById('bgAnimation');
 const symbols = ['+', '−', '×', '÷', '=', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', 'π', '√'];
@@ -519,6 +536,13 @@ function startGame() {
     showScreen('gameScreen');
     generateQuestion();
     document.getElementById('answerInput').focus();
+
+    emitBridgeEvent('onGameStart', {
+        gameId: GED_BFF_CONFIG.gameId,
+        gameMode,
+        difficulty,
+        startedAt: new Date().toISOString()
+    });
     
     // Start timer for timed modes
     if (gameMode === 'speed' || gameMode === 'timeAttack') {
@@ -608,9 +632,11 @@ function submitAnswer() {
     
     const answerTime = (Date.now() - questionStartTime) / 1000;
     totalAnswerTime += answerTime;
+    let isCorrect = false;
     
     if (userAnswer === currentAnswer) {
         // Correct!
+        isCorrect = true;
         correct++;
         streak++;
         if (streak > maxStreak) maxStreak = streak;
@@ -651,6 +677,19 @@ function submitAnswer() {
         input.classList.add('incorrect');
         showFeedback('✗', false);
     }
+
+    emitBridgeEvent('onQuestionAnswered', {
+        gameId: GED_BFF_CONFIG.gameId,
+        gameMode,
+        difficulty,
+        questionNumber: questionCount,
+        userAnswer,
+        correctAnswer: currentAnswer,
+        isCorrect,
+        answerTimeSec: Number(answerTime.toFixed(2)),
+        score,
+        streak
+    });
     
     updateDisplay();
     
@@ -757,6 +796,19 @@ function endGame() {
     document.getElementById('gradeLabel').textContent = gradeLabel;
     document.getElementById('trophyEmoji').textContent = trophy;
     
+    emitBridgeEvent('onGameComplete', {
+        gameId: GED_BFF_CONFIG.gameId,
+        gameMode,
+        difficulty,
+        score,
+        correct,
+        incorrect,
+        accuracyPct,
+        maxStreak,
+        avgSpeedSec: Number(avgSpeed),
+        completedAt: new Date().toISOString()
+    });
+
     showScreen('resultsScreen');
 }
 
